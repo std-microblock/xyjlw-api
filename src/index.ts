@@ -9,6 +9,25 @@ export type { ApiResponse, ApiClientOptions, RequestOptions, TokenPayload } from
 // 工具函数
 export { aesEncrypt, aesDecrypt, parseToken, isTokenExpired } from "./utils/crypto.js";
 export type { ParsedToken } from "./utils/crypto.js";
+export {
+  MemoryTokenStore,
+  FileTokenStore,
+  createMemoryTokenStore,
+  createFileTokenStore,
+} from "./token-store.js";
+export type { TokenStore, FileTokenStoreOptions } from "./token-store.js";
+export {
+  TelegramBot,
+  AutoSignBot,
+  normalizeBearerToken,
+  buildSubmitApplyPayload,
+} from "./bot.js";
+export type {
+  TelegramBotConfig,
+  AutoSignBotConfig,
+  WatchedActivity,
+  SubmitApplyPreset,
+} from "./bot.js";
 
 // 模块
 export { CommonModule } from "./modules/common.js";

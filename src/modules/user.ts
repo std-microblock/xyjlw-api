@@ -113,12 +113,12 @@ export class UserModule {
 
   /** 微信自动登录（code 换 token） */
   autoLogin(params: AutoLoginParams): Promise<ApiResponse<LoginResponse>> {
-    return this.client.post("Login/login", params as Record<string, unknown>);
+    return this.client.post("Login/login", params as unknown as Record<string, unknown>);
   }
 
   /** 手机号授权绑定 */
   authMobile(params: AuthMobileParams): Promise<ApiResponse<AuthMobileResponse>> {
-    return this.client.post("User/authMobile", params as Record<string, unknown>);
+    return this.client.post("User/authMobile", params as unknown as Record<string, unknown>);
   }
 
   /** 修改用户信息 */
@@ -128,27 +128,27 @@ export class UserModule {
 
   /** 提交意见反馈 */
   submitFeedback(params: FeedbackParams): Promise<ApiResponse<null>> {
-    return this.client.post("User/submitFeedback", params as Record<string, unknown>);
+    return this.client.post("User/submitFeedback", params as unknown as Record<string, unknown>);
   }
 
   /** 记录广告曝光日志 */
   addAdLog(params: AdLogParams): Promise<ApiResponse<null>> {
-    return this.client.post("User/addAdLog", params as Record<string, unknown>);
+    return this.client.post("User/addAdLog", params as unknown as Record<string, unknown>);
   }
 
   /** 记录广告点击日志 */
   addAdClickLog(params: AdLogParams): Promise<ApiResponse<null>> {
-    return this.client.post("User/addAdClickLog", params as Record<string, unknown>);
+    return this.client.post("User/addAdClickLog", params as unknown as Record<string, unknown>);
   }
 
   /** 获取订阅消息 msgId */
   getTempMsgId(params: TempMsgParams): Promise<ApiResponse<TempMsgResponse>> {
-    return this.client.post("User/getTempMsgId", params as Record<string, unknown>);
+    return this.client.post("User/getTempMsgId", params as unknown as Record<string, unknown>);
   }
 
   /** 添加订阅消息 msgId（需鉴权） */
   addTempMsgId(params: TempMsgParams): Promise<ApiResponse<null>> {
-    return this.client.post("User/addTempMsgId", params as Record<string, unknown>);
+    return this.client.post("User/addTempMsgId", params as unknown as Record<string, unknown>);
   }
 
   /** 获取会员等级列表（需鉴权） */
@@ -173,6 +173,6 @@ export class UserModule {
 
   /** 提交提现申请（需鉴权） */
   submitWithdrawal(params: WithdrawalParams): Promise<ApiResponse<null>> {
-    return this.client.post("User/submitWithdrawal", params as Record<string, unknown>);
+    return this.client.post("User/submitWithdrawal", params as unknown as Record<string, unknown>);
   }
 }

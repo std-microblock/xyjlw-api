@@ -101,17 +101,17 @@ export class OrdersModule {
 
   /** 提交订单 */
   submitOrder(params: SubmitOrderParams): Promise<ApiResponse<SubmitOrderResponse>> {
-    return this.client.post("Orders/submitOrder", params as Record<string, unknown>);
+    return this.client.post("Orders/submitOrder", params as unknown as Record<string, unknown>);
   }
 
   /** 发起支付 */
   payOrder(params: PayOrderParams): Promise<ApiResponse<PayOrderResponse>> {
-    return this.client.post("Orders/payOrder", params as Record<string, unknown>);
+    return this.client.post("Orders/payOrder", params as unknown as Record<string, unknown>);
   }
 
   /** 标记订单支付成功（客户端回调） */
   successOrder(params: SuccessOrderParams): Promise<ApiResponse<null>> {
-    return this.client.post("Orders/successOrder", params as Record<string, unknown>);
+    return this.client.post("Orders/successOrder", params as unknown as Record<string, unknown>);
   }
 
   /** 获取各状态订单数量 */
@@ -149,7 +149,7 @@ export class ScoreModule {
 
   /** 积分奖励（完成任务触发） */
   rewardScore(params: RewardScoreParams): Promise<ApiResponse<{ added: number }>> {
-    return this.client.post("Score/rewardScore", params as Record<string, unknown>);
+    return this.client.post("Score/rewardScore", params as unknown as Record<string, unknown>);
   }
 
   /** 获取积分明细列表 */
@@ -164,6 +164,6 @@ export class ScoreModule {
 
   /** 收益奖励 */
   rewardFee(params: RewardFeeParams): Promise<ApiResponse<null>> {
-    return this.client.post("Score/rewardFee", params as Record<string, unknown>);
+    return this.client.post("Score/rewardFee", params as unknown as Record<string, unknown>);
   }
 }

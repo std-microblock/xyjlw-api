@@ -123,10 +123,23 @@ export interface GetUserNameByGroupParams {
   group_id: number;
 }
 
+export interface SubmitApplyFieldItem {
+  id: string;
+  type?: string;
+  title?: string;
+  value?: unknown;
+}
+
 export interface SubmitApplyParams {
-  id: number;
-  form_data?: unknown;
-  nickname?: string;
+  /** 已提交记录 id，新提交时通常传 0 */
+  id?: number;
+  /** 接龙活动 id */
+  activity_id: number;
+  /** 姓名字段 */
+  name?: string;
+  /** 表单内容。传数组/对象时会自动 JSON.stringify */
+  content?: string | SubmitApplyFieldItem[] | Record<string, unknown>;
+  /** 打卡 / 签到图片 URL */
   sign_img?: string;
 }
 

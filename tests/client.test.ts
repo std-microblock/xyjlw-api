@@ -178,6 +178,37 @@ describe("JielongClient - 401 Token 自动刷新", () => {
     expect(res.code).toBe(1);
   });
 
+  it("401 时即使未提供 onTokenRefresh 也会携带新 token 重试当前请求", async () => {
+    let callCount = 0;
+    const fetchMock = vi.fn().mockImplementation(async (_url: string, init?: { headers?: Record<string, string> }) => {
+      callCount++;
+      if (callCount === 1) {
+        expect(init?.headers?.Authorization).toBe("Bearer old.token");
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ code: 401, data: { token: "new.token.inline" }, msg: "" }),
+        };
+      }
+      expect(init?.headers?.Authorization).toBe("Bearer new.token.inline");
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ code: 1, data: { ok: true }, msg: "" }),
+      };
+    });
+
+    vi.stubGlobal("fetch", fetchMock);
+
+    const client = makeClient({
+      getToken: () => "old.token",
+    });
+
+    const res = await client.post("JieLong/list");
+    expect(callCount).toBe(2);
+    expect(res.data).toEqual({ ok: true });
+  });
+
   it("401 且没有新 token 时抛出 UnauthorizedError 并调用 onUnauthorized", async () => {
     vi.stubGlobal(
       "fetch",

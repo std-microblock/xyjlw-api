@@ -136,13 +136,22 @@ describe("JielongModule", () => {
     expect(body.get("status")).toBe("0");
   });
 
-  it("submitApply 传递参与数据", async () => {
+  it("submitApply 传递真实参与参数", async () => {
     stubSuccess({ apply_id: 100 });
     const api = makeAPI();
-    await api.jielong.submitApply({ id: 5, nickname: "李四" });
+    await api.jielong.submitApply({
+      id: 0,
+      activity_id: 5,
+      name: "李四",
+      content: [{ id: "name", value: "李四" }],
+      sign_img: "https://example.com/test.jpg",
+    });
     const body = getLastRequestBody();
-    expect(body.get("id")).toBe("5");
-    expect(body.get("nickname")).toBe("李四");
+    expect(body.get("id")).toBe("0");
+    expect(body.get("activity_id")).toBe("5");
+    expect(body.get("name")).toBe("李四");
+    expect(body.get("content")).toBe('[{"id":"name","value":"李四"}]');
+    expect(body.get("sign_img")).toBe("https://example.com/test.jpg");
   });
 
   it("getExportStatus 传递 job_id", async () => {

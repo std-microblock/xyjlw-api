@@ -52,7 +52,17 @@ export class JielongClient {
     params: Record<string, unknown> = {},
     requestOptions: RequestOptions = {}
   ): Promise<ApiResponse<TData>> {
-    const token = this.options.getToken();
+    return this.postInternal<TData>(path, params, requestOptions);
+  }
+
+  private async postInternal<TData = unknown>(
+    path: string,
+    params: Record<string, unknown>,
+    requestOptions: RequestOptions,
+    tokenOverride?: string | null,
+    allowTokenRefresh = true
+  ): Promise<ApiResponse<TData>> {
+    const token = tokenOverride ?? this.options.getToken();
 
     // 构建请求 body（x-www-form-urlencoded）
     const body = new URLSearchParams();
@@ -118,11 +128,10 @@ export class JielongClient {
 
     // 401：token 过期，服务器返回新 token，需要重试
     if (json.code === ResponseCode.TOKEN_EXPIRED) {
-      const newToken = (json.data as { token?: string })?.token;
-      if (newToken && this.options.onTokenRefresh) {
-        this.options.onTokenRefresh(newToken);
-        // 使用新 token 重试一次
-        return this.postWithToken<TData>(path, params, newToken, requestOptions);
+      const newToken = this.extractRefreshedToken(json);
+      if (allowTokenRefresh && newToken) {
+        this.options.onTokenRefresh?.(newToken);
+        return this.postInternal<TData>(path, params, requestOptions, newToken, false);
       }
       this.options.onUnauthorized?.();
       throw new UnauthorizedError("登录已过期，请重新登录");
@@ -136,20 +145,14 @@ export class JielongClient {
     return json;
   }
 
-  // 使用指定 token 发请求（用于 401 后重试）
-  private async postWithToken<TData>(
-    path: string,
-    params: Record<string, unknown>,
-    token: string,
-    requestOptions: RequestOptions
-  ): Promise<ApiResponse<TData>> {
-    const originalGetToken = this.options.getToken;
-    // 临时覆盖 getToken
-    (this.options as { getToken: () => string | null }).getToken = () => token;
-    try {
-      return await this.post<TData>(path, params, requestOptions);
-    } finally {
-      (this.options as { getToken: () => string | null }).getToken = originalGetToken;
-    }
+  private extractRefreshedToken<TData>(json: ApiResponse<TData>): string | null {
+    const data = json.data as
+      | { token?: string; access_token?: string }
+      | undefined
+      | null;
+
+    if (data?.token) return data.token;
+    if (data?.access_token) return data.access_token;
+    return null;
   }
 }
