@@ -4,7 +4,11 @@ import {
   DEFAULT_SIGN_IMAGE_URL,
   buildSubmitApplyPayload,
   buildSubmitContent,
+  buildDecisionCallbackData,
+  deriveNextActivityId,
+  extractActivitySignSource,
   normalizeBearerToken,
+  parseDecisionCallbackData,
 } from "../src/bot.js";
 
 describe("bot helpers", () => {
@@ -57,5 +61,50 @@ describe("bot helpers", () => {
       { id: "student_no", type: undefined, title: "学号", value: "20231234" },
       { id: "photo", type: undefined, title: "图片", value: "https://example.com/a.jpg" },
     ]);
+  });
+  it("deriveNextActivityId polling cursor", () => {
+    expect(
+      deriveNextActivityId({
+        polling: { nextActivityId: 300 },
+        activities: [{ activityId: 10 }],
+        state: [{ activityId: 20 }],
+      })
+    ).toBe(300);
+
+    expect(
+      deriveNextActivityId({
+        activities: [{ activityId: 10 }, { activityId: 19 }],
+        state: [{ activityId: 25 }],
+      })
+    ).toBe(26);
+  });
+
+  it("extractActivitySignSource", () => {
+    expect(
+      extractActivitySignSource({
+        user_id: 123,
+        member: [
+          { user_id: 100, name: "张三" },
+          { user_id: 123, name: "李四" },
+        ],
+      })
+    ).toEqual({ userId: 123, name: "李四" });
+
+    expect(
+      extractActivitySignSource({
+        user_id: 456,
+        member: JSON.stringify([{ userid: 456, nickname: "王五" }]),
+      })
+    ).toEqual({ userId: 456, name: "王五" });
+  });
+
+  it("callback data 构建和解析是正确的", () => {
+    const data = buildDecisionCallbackData("auto", 35791);
+    expect(data).toBe("jl:auto:35791");
+    expect(parseDecisionCallbackData(data)).toEqual({
+      action: "auto",
+      activityId: 35791,
+    });
+    expect(parseDecisionCallbackData("bad:data")).toBeNull();
   });
 });
