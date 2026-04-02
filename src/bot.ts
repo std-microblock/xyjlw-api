@@ -223,6 +223,7 @@ interface ActivityDetailLike {
   mySubmit?: unknown;
   form?: ActivityFormItem[] | string;
   member?: unknown;
+  is_del?: boolean;
 }
 
 interface ActivityMemberLike {
@@ -467,6 +468,10 @@ export class AutoSignBot {
   }
 
   private async activityLoop(): Promise<void> {
+    const initialActivityId = await this.bisectNewActivities(deriveNextActivityId(this.profile))
+    console.log(`初始活动ID设定为 ${initialActivityId}`);
+    this.profile.polling = { nextActivityId: initialActivityId + 1 };
+    this.saveProfile();
     while (this.active) {
       try {
         await this.pollNewActivities();
@@ -481,12 +486,57 @@ export class AutoSignBot {
     for (let index = 0; index < batchSize; index += 1) {
       const activityId = deriveNextActivityId(this.profile);
       const detail = await this.fetchActivityDetailsById(activityId);
-      if (!detail) break;
+      if (detail.is_del) break;
+      console.log(detail)
+      console.log(`发现活动 #${activityId}: ${detail.title ?? "(无标题)"}，发起人 user_id: ${detail.user_id ?? "(未知)"}`);
 
       await this.handleDiscoveredActivity(activityId, detail);
       this.profile.polling = { nextActivityId: activityId + 1 };
       this.saveProfile();
     }
+  }
+
+  private async bisectNewActivities(start: number): Promise<number> {
+    // 第一步：指数搜索找到上界
+    let low = start - 2;
+    let high = start;
+    console.log(`开始指数搜索活动ID，从 ${start} 开始`);
+    // 指数增长找到包含最新活动ID的上界
+    let firstTry = true
+    while (true) {
+      const detail = await this.fetchActivityDetailsById(high);
+      if (detail.is_del) {
+        break;
+      }
+      low = high;
+      high = high + (firstTry ? 40 : 10000);
+      console.log(`活动 #${low} 存在，继续搜索... 下一个尝试: ${high}`, detail);
+      firstTry = false;
+    }
+
+    console.log(`活动 ID 范围: ${low} - ${high}`);
+
+    // 第二步：二分查找找到最新的活动ID
+    let latestValidId = low;
+    let left = low;
+    let right = high;
+
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      const detail = await this.fetchActivityDetailsById(mid);
+
+      if (detail && !detail.is_del) {
+        // 这个ID有效，尝试找更大的
+        latestValidId = mid;
+        left = mid + 1;
+      } else {
+        // 这个ID无效，找更小的
+        right = mid - 1;
+      }
+    }
+
+    console.log(`找到最新活动ID: ${latestValidId}`);
+    return latestValidId;
   }
 
   private async fetchActivityDetailsById(activityId: number): Promise<ActivityDetailLike | null> {

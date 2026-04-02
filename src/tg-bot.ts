@@ -5,6 +5,7 @@ import { createFileTokenStore } from "./token-store.js";
 
 function requireEnv(name: string): string {
   const value = process.env[name]?.trim();
+  console.log(`环境变量 ${name}:`, value);
   if (!value) {
     throw new Error(`缺少环境变量 ${name}`);
   }
@@ -41,7 +42,7 @@ async function main() {
     defaultImageUrl: process.env.JL_SIGN_IMAGE_URL || DEFAULT_SIGN_IMAGE_URL,
     defaultName: process.env.JL_SIGN_NAME || "",
     defaultFormValues: parseJsonEnv("JL_FORM_VALUES_JSON"),
-    pollIntervalMs: Number(process.env.JL_POLL_INTERVAL_MS || 60000),
+    pollIntervalMs: Number(process.env.JL_POLL_INTERVAL_MS || 60 * 1000),
   });
 
   await bot.start();

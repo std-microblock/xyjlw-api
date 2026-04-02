@@ -249,22 +249,22 @@ export class JielongModule {
 
   /** 创建/编辑接龙活动 */
   submitActivity(params: SubmitActivityParams): Promise<ApiResponse<SubmitActivityResponse>> {
-    return this.client.post("JieLong/submitActivity", params as Record<string, unknown>);
+    return this.client.post("JieLong/submitActivity", params as unknown as Record<string, unknown>);
   }
 
   /** 获取接龙详情 */
-  getDetails(params: GetDetailsParams): Promise<ApiResponse<ActivityDetail>> {
-    return this.client.post("JieLong/getDetails", params as Record<string, unknown>);
+  async getDetails(params: GetDetailsParams): Promise<ApiResponse<ActivityDetail> | null> {
+    return this.client.post("JieLong/getDetails", params as unknown as Record<string, unknown>) as any;
   }
 
   /** 获取投票统计 */
   votingStatistics(params: VotingStatisticsParams): Promise<ApiResponse<unknown>> {
-    return this.client.post("JieLong/votingStatistics", params as Record<string, unknown>);
+    return this.client.post("JieLong/votingStatistics", params as unknown as Record<string, unknown>);
   }
 
   /** 获取打卡人名单 */
   getDetailsClockNames(params: GetDetailsParams): Promise<ApiResponse<string[]>> {
-    return this.client.post("JieLong/getDetailsClockNames", params as Record<string, unknown>);
+    return this.client.post("JieLong/getDetailsClockNames", params as unknown as Record<string, unknown>);
   }
 
   /** 增加浏览次数 */
@@ -274,12 +274,12 @@ export class JielongModule {
 
   /** 获取参与列表 */
   getApplyList(params: ApplyListParams): Promise<ApiResponse<ApplyListResponse>> {
-    return this.client.post("JieLong/getApplyList", params as Record<string, unknown>);
+    return this.client.post("JieLong/getApplyList", params as unknown as Record<string, unknown>);
   }
 
   /** 获取管理员列表 */
   getAdmin(params: AdminParams): Promise<ApiResponse<AdminResponse>> {
-    return this.client.post("JieLong/getAdmin", params as Record<string, unknown>);
+    return this.client.post("JieLong/getAdmin", params as unknown as Record<string, unknown>);
   }
 
   /** 撤销管理员 */
@@ -289,7 +289,7 @@ export class JielongModule {
 
   /** 获取管理员二维码 */
   getAdminQrCode(params: QrCodeParams): Promise<ApiResponse<QrCodeResponse>> {
-    return this.client.post("JieLong/getAdminQrCode", params as Record<string, unknown>);
+    return this.client.post("JieLong/getAdminQrCode", params as unknown as Record<string, unknown>);
   }
 
   /** 获取加入管理员初始化信息 */
@@ -304,37 +304,37 @@ export class JielongModule {
 
   /** 获取提醒设置 */
   getRemindInfo(params: RemindInfoParams): Promise<ApiResponse<unknown>> {
-    return this.client.post("JieLong/getRemindInfo", params as Record<string, unknown>);
+    return this.client.post("JieLong/getRemindInfo", params as unknown as Record<string, unknown>);
   }
 
   /** 保存提醒设置 */
   saveRemind(params: SaveRemindParams): Promise<ApiResponse<null>> {
-    return this.client.post("JieLong/saveRemind", params as Record<string, unknown>);
+    return this.client.post("JieLong/saveRemind", params as unknown as Record<string, unknown>);
   }
 
   /** 设置活动状态（开启/关闭/删除） */
   setStatus(params: SetStatusParams): Promise<ApiResponse<null>> {
-    return this.client.post("JieLong/setStatus", params as Record<string, unknown>);
+    return this.client.post("JieLong/setStatus", params as unknown as Record<string, unknown>);
   }
 
   /** 根据群组获取用户名单 */
   getUserNameByGroupId(params: GetUserNameByGroupParams): Promise<ApiResponse<string[]>> {
-    return this.client.post("JieLong/getUserNameByGroupId", params as Record<string, unknown>);
+    return this.client.post("JieLong/getUserNameByGroupId", params as unknown as Record<string, unknown>);
   }
 
   /** 提交参与/打卡 */
   submitApply(params: SubmitApplyParams): Promise<ApiResponse<{ apply_id: number }>> {
-    return this.client.post("JieLong/submitApply", params as Record<string, unknown>);
+    return this.client.post("JieLong/submitApply", params as unknown as Record<string, unknown>);
   }
 
   /** 删除参与记录 */
   delData(params: DelDataParams): Promise<ApiResponse<null>> {
-    return this.client.post("JieLong/delData", params as Record<string, unknown>);
+    return this.client.post("JieLong/delData", params as unknown as Record<string, unknown>);
   }
 
   /** 批量删除记录 */
   batchDelData(params: BatchDelDataParams): Promise<ApiResponse<null>> {
-    return this.client.post("JieLong/batchDelData", params as Record<string, unknown>);
+    return this.client.post("JieLong/batchDelData", params as unknown as Record<string, unknown>);
   }
 
   /** 获取案例列表 */
@@ -344,7 +344,7 @@ export class JielongModule {
 
   /** 获取接龙二维码 */
   getJLQrCode(params: QrCodeParams): Promise<ApiResponse<QrCodeResponse>> {
-    return this.client.post("JieLong/getJLQrCode", params as Record<string, unknown>);
+    return this.client.post("JieLong/getJLQrCode", params as unknown as Record<string, unknown>);
   }
 
   /** 获取表单数据文本 */
@@ -354,17 +354,17 @@ export class JielongModule {
 
   /** 初始化导出任务（获取可导出字段） */
   getExportInit(params: ExportInitParams): Promise<ApiResponse<ExportInitResponse>> {
-    return this.client.post("JieLong/getExportInit", params as Record<string, unknown>);
+    return this.client.post("JieLong/getExportInit", params as unknown as Record<string, unknown>);
   }
 
   /** 添加导出任务 */
   addExportJob(params: AddExportJobParams): Promise<ApiResponse<ExportJobResponse>> {
-    return this.client.post("JieLong/addExportJob", params as Record<string, unknown>);
+    return this.client.post("JieLong/addExportJob", params as unknown as Record<string, unknown>);
   }
 
   /** 查询导出任务状态 */
   getExportStatus(params: ExportStatusParams): Promise<ApiResponse<ExportStatusResponse>> {
-    return this.client.post("JieLong/getExportStatus", params as Record<string, unknown>);
+    return this.client.post("JieLong/getExportStatus", params as unknown as Record<string, unknown>);
   }
 
   /** 获取模板类型 */
@@ -379,31 +379,31 @@ export class JielongModule {
 
   /** 保存自定义配置 */
   saveCustomConfig(params: SaveCustomConfigParams): Promise<ApiResponse<null>> {
-    return this.client.post("JieLong/saveCustomConfig", params as Record<string, unknown>);
+    return this.client.post("JieLong/saveCustomConfig", params as unknown as Record<string, unknown>);
   }
 
   /** 保存评分 */
   saveRating(params: SaveRatingParams): Promise<ApiResponse<null>> {
-    return this.client.post("JieLong/saveRating", params as Record<string, unknown>);
+    return this.client.post("JieLong/saveRating", params as unknown as Record<string, unknown>);
   }
 
   /** 保存评语 */
   savePingYu(params: SavePingYuParams): Promise<ApiResponse<null>> {
-    return this.client.post("JieLong/savePingYu", params as Record<string, unknown>);
+    return this.client.post("JieLong/savePingYu", params as unknown as Record<string, unknown>);
   }
 
   /** 删除评论 */
   delComment(params: DelCommentParams): Promise<ApiResponse<null>> {
-    return this.client.post("JieLong/delComment", params as Record<string, unknown>);
+    return this.client.post("JieLong/delComment", params as unknown as Record<string, unknown>);
   }
 
   /** 保存修改图片 */
   saveAmendImg(params: SaveAmendImgParams): Promise<ApiResponse<null>> {
-    return this.client.post("JieLong/saveAmendImg", params as Record<string, unknown>);
+    return this.client.post("JieLong/saveAmendImg", params as unknown as Record<string, unknown>);
   }
 
   /** 初始化评论 */
   initComment(params: InitCommentParams): Promise<ApiResponse<unknown>> {
-    return this.client.post("JieLong/initComment", params as Record<string, unknown>);
+    return this.client.post("JieLong/initComment", params as unknown as Record<string, unknown>);
   }
 }

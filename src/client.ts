@@ -70,17 +70,17 @@ export class JielongClient {
     body.set("appversion", API_CONFIG.APP_VERSION);
 
     // 附加 user_id（从 token 解析，如果有的话）
-    if (token) {
-      try {
-        const { parseToken } = await import("./utils/crypto.js");
-        const parsed = parseToken(token);
-        if (parsed) body.set("user_id", String(parsed.uid));
-      } catch {
-        body.set("user_id", "0");
-      }
-    } else {
-      body.set("user_id", "0");
-    }
+    // if (token) {
+    //   try {
+    //     const { parseToken } = await import("./utils/crypto.js");
+    //     const parsed = parseToken(token);
+    //     if (parsed) body.set("user_id", String(parsed.uid));
+    //   } catch {
+    //     body.set("user_id", "0");
+    //   }
+    // } else {
+      body.set("user_id", "222186");
+    // }
 
     // 追加业务参数
     for (const [k, v] of Object.entries(params)) {
@@ -89,6 +89,7 @@ export class JielongClient {
       }
     }
 
+    console.log(`请求 ${path}，参数:`, Object.fromEntries(body.entries()), body.toString());
     const url = `${requestOptions.baseUrl ?? this.baseUrl}${path}`;
     const headers: Record<string, string> = {
       "Content-Type": "application/x-www-form-urlencoded",
